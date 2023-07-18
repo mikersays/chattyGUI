@@ -12,6 +12,12 @@ This application is a simple text-based chatbot that uses OpenAI's GPT-4 model t
 - Word wrapping to ensure that messages do not get cut off at the window edge.
 - Messages from both the user and the AI are saved to a markdown (.md) file on the user's desktop.
 
+## Prerequisites
+
+- Python 3.6 or higher.
+- OpenAI Python library.
+- Tkinter Python library.
+
 ## Setup
 
 1. Install the required Python libraries with pip:
