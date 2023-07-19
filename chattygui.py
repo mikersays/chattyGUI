@@ -10,7 +10,7 @@ from tkinter import scrolledtext
 openai.api_key = "<API key>"
 
 # Function to generate a response using GPT-4
-def generate_response(prompt, messages, max_tokens=1500, temperature=1):
+def generate_response(prompt, messages, max_tokens=5000, temperature=1):
     messages.append({"role": "user", "content": prompt})
     response = openai.ChatCompletion.create(
         model="gpt-4-0613",
@@ -47,19 +47,23 @@ def chatbot():
     window.title("Chatty")
 
     # Create a text widget for displaying the conversation
-    conversation_text = scrolledtext.ScrolledText(window, wrap=tk.WORD)  # change is here
+    conversation_text = scrolledtext.ScrolledText(window, wrap=tk.WORD)
+    conversation_text['font'] = ('Arial', 14)
     conversation_text.grid(column=0, row=0, sticky="nsew")
 
     # Create tags for the user and AI text
-    conversation_text.tag_configure("user", foreground="blue", font=("Arial", 10, "bold"))
-    conversation_text.tag_configure("ai", foreground="red", font=("Arial", 10, "bold"))
+    conversation_text.tag_configure("user", foreground="blue", font=("Arial", 14, "bold"))
+    conversation_text.tag_configure("ai", foreground="red", font=("Arial", 14, "bold"))
 
     # Create an entry widget for the user to type in
-    user_input = tk.Entry(window)
+    user_input = tk.Entry(window, font=("Arial", 14))
     user_input.grid(column=0, row=1, sticky="ew")
 
+    # Set the focus to the user_input Entry widget
+    user_input.focus_set()
+
     # Create a label for displaying a loading text
-    loading_label = tk.Label(window, text="")
+    loading_label = tk.Label(window, text="", font=("Arial", 14))
     loading_label.grid(column=0, row=2)
 
     window.grid_columnconfigure(0, weight=1)
