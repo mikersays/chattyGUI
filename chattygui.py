@@ -24,9 +24,17 @@ def generate_response(prompt, messages, max_tokens=5000, temperature=1):
     return response.choices[0].message['content']
 
 # Function to call GPT-4 API without a loading animation
-def call_gpt(prompt, messages):
+def call_gpt(prompt, messages, conversation_text, output_file_path, loading_label):
     response = generate_response(prompt, messages)
-    return response
+
+    # Hide the loading text
+    loading_label.config(text="")
+
+    # Append the AI's response to the conversation text widget
+    conversation_text.insert(tk.END, "AI: ", "ai")
+    conversation_text.insert(tk.END, response + "\n")
+    with open(output_file_path, "a") as output_file:
+        output_file.write(f"AI: {response}\n\n") 
 
 # Function to get the user's desktop path
 def get_desktop_path():
@@ -69,6 +77,16 @@ def chatbot():
     window.grid_columnconfigure(0, weight=1)
     window.grid_rowconfigure(0, weight=1)
 
+    loading_chars = ['|', '/', '-', '\\']
+    loading_index = 0
+
+    def loading_animation():
+        nonlocal loading_index
+        if loading_label['text'].startswith('Generating'):
+            loading_label['text'] = f"Generating response... {loading_chars[loading_index]}"
+            loading_index = (loading_index + 1) % len(loading_chars)
+            window.after(100, loading_animation)  # Repeat after 100 ms
+
     def handle_enter_pressed(event):
         # Get the user's input and clear the entry widget
         user_text = user_input.get()
@@ -82,21 +100,13 @@ def chatbot():
 
         # Show the loading text
         loading_label.config(text="Generating response...")
+        loading_animation()
 
         # Update the GUI to show the changes
         window.update_idletasks()
 
-        # Generate the AI's response
-        response = call_gpt(user_text, messages)
-
-        # Hide the loading text
-        loading_label.config(text="")
-
-        # Append the AI's response to the conversation text widget
-        conversation_text.insert(tk.END, "AI: ", "ai")
-        conversation_text.insert(tk.END, response + "\n")
-        with open(output_file_path, "a") as output_file:
-            output_file.write(f"AI: {response}\n\n") 
+        # Generate the AI's response in a separate thread to keep the GUI responsive
+        threading.Thread(target=call_gpt, args=(user_text, messages, conversation_text, output_file_path, loading_label)).start()
 
     # Bind the Enter key to the handle_enter_pressed function
     user_input.bind("<Return>", handle_enter_pressed)
