@@ -1,2 +1,2 @@
 #!/bin/bash
-python3 chattyguipy
+python3 chattygui.py
