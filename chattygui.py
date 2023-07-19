@@ -57,7 +57,7 @@ def chatbot():
     # Create a text widget for displaying the conversation
     conversation_text = scrolledtext.ScrolledText(window, wrap=tk.WORD)
     conversation_text['font'] = ('Arial', 14)
-    conversation_text.grid(column=0, row=0, sticky="nsew")
+    conversation_text.grid(column=0, row=0, sticky="nsew", columnspan=2)
 
     # Create tags for the user and AI text
     conversation_text.tag_configure("user", foreground="blue", font=("Arial", 14, "bold"))
@@ -72,7 +72,7 @@ def chatbot():
 
     # Create a label for displaying a loading text
     loading_label = tk.Label(window, text="", font=("Arial", 14))
-    loading_label.grid(column=0, row=2)
+    loading_label.grid(column=0, row=2, sticky="w", columnspan=2)
 
     window.grid_columnconfigure(0, weight=1)
     window.grid_rowconfigure(0, weight=1)
@@ -87,7 +87,7 @@ def chatbot():
             loading_index = (loading_index + 1) % len(loading_chars)
             window.after(100, loading_animation)  # Repeat after 100 ms
 
-    def handle_enter_pressed(event):
+    def handle_enter_pressed(event=None):
         # Get the user's input and clear the entry widget
         user_text = user_input.get()
         user_input.delete(0, tk.END)
@@ -111,8 +111,13 @@ def chatbot():
     # Bind the Enter key to the handle_enter_pressed function
     user_input.bind("<Return>", handle_enter_pressed)
 
+    # Create a "Send" button
+    send_button = tk.Button(window, text="Send", font=("Arial", 14), command=handle_enter_pressed)
+    send_button.grid(column=1, row=1, sticky="e")
+
     # Start the GUI event loop
     window.mainloop()
 
 if __name__ == "__main__":
     chatbot()
+    
