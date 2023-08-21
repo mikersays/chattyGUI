@@ -40,6 +40,12 @@ def call_gpt(prompt, messages, conversation_text, output_file_path, loading_labe
 def get_desktop_path():
     return os.path.join(os.path.expanduser("~"), "Desktop")
 
+# Function to read the instruction from an external file
+def read_instruction_from_file(file_path):
+    with open(file_path, "r") as file:
+        instruction = file.read().strip()
+    return instruction
+
 # Main function to start the chatbot
 def chatbot():
     # Prepare the output file
@@ -48,7 +54,8 @@ def chatbot():
     output_filename = f"chat_output_{current_time}.md"
     output_file_path = os.path.join(desktop_path, output_filename)
 
-    messages = [{"role": "system", "content": "You are a helpful assistant."}]
+    system_instruction = read_instruction_from_file("AIpersona.txt")
+    messages = [{"role": "system", "content": system_instruction}]
 
     # Create a GUI application window
     window = tk.Tk()
