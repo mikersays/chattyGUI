@@ -13,7 +13,7 @@ openai.api_key = "<API key>"
 def generate_response(prompt, messages, max_tokens=5000, temperature=1):
     messages.append({"role": "user", "content": prompt})
     response = openai.ChatCompletion.create(
-        model="gpt-4-0613",
+        model="gpt-4",
         messages=messages,
         max_tokens=max_tokens,
         temperature=temperature,
